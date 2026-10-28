@@ -52,8 +52,7 @@ Evaluated on the predefined **QMAP benchmark homology test splits**:
 ├── make_fig1.py                      # Pipeline architecture and workflow diagram generator
 ├── make_fig2.py                      # Parity plots generator (Experimental vs Predicted)
 └── README.md```
-
----
+```
 
 ## Setup and Environment Installation
 
