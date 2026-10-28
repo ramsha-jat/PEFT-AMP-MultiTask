@@ -53,11 +53,14 @@ Evaluated on the predefined **QMAP benchmark homology test splits**:
 ├── make_fig2.py                      # Parity plots generator (Experimental vs Predicted)
 └── README.md```
 
+---
+
 ## Setup and Environment Installation
 
 ```git clone [https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git](https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git)
-cd PEFT-AMP-MultiTask``
-`
+cd PEFT-AMP-MultiTask```
+
+
 # 1. Create and activate a virtual environment
 ```python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate```
