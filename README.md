@@ -58,9 +58,9 @@ Evaluated on the predefined **QMAP benchmark homology test splits**:
 
 ```git clone [https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git](https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git)
 cd PEFT-AMP-MultiTask```
+---
 
-
-# 1. Create and activate a virtual environment
+#1. Create and activate a virtual environment
 ```python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate```
 
