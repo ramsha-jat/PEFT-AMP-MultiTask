@@ -57,16 +57,16 @@ Evaluated on the predefined **QMAP benchmark homology test splits**:
 ## Setup and Environment Installation
 
 ```git clone [https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git](https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git)
-cd PEFT-AMP-MultiTask
+cd PEFT-AMP-MultiTask```
 
 
 # 1. Create and activate a virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+```python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate```
 
 # 2. Install PyTorch with CUDA support
-pip install --upgrade pip
+```pip install --upgrade pip
 pip install torch torchvision torchaudio --index-url [https://download.pytorch.org/whl/cu118](https://download.pytorch.org/whl/cu118)```
 
 # 3. Install model fine-tuning and evaluation libraries
-pip install transformers peft datasets pandas numpy scikit-learn scipy matplotlib seaborn```
+```pip install transformers peft datasets pandas numpy scikit-learn scipy matplotlib seaborn```
