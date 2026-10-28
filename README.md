@@ -5,8 +5,6 @@
 [![PEFT](https://img.shields.io/badge/PEFT-LoRA-orange.svg)](https://github.com/huggingface/peft)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Official repository for **"Parameter-Efficient Adaptation of Protein Language Models for Dual-Target Antimicrobial Peptide Discovery Under Strict Homology Constraints"**.
-
 ---
 
 ## Abstract & Contribution
@@ -21,7 +19,7 @@ This work introduces an end-to-end multi-task parameter-efficient transfer learn
 
 ---
 
-## 🔬 Benchmark Results
+## Benchmark Results
 
 Evaluated on the predefined **QMAP benchmark homology test splits**:
 
@@ -54,3 +52,19 @@ Evaluated on the predefined **QMAP benchmark homology test splits**:
 ├── make_fig1.py                      # Pipeline architecture and workflow diagram generator
 ├── make_fig2.py                      # Parity plots generator (Experimental vs Predicted)
 └── README.md
+
+## Setup and Environment Installation
+
+```git clone [https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git](https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git)
+cd PEFT-AMP-MultiTask``
+`
+# 1. Create and activate a virtual environment
+```python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate```
+
+# 2. Install PyTorch with CUDA support
+```pip install --upgrade pip
+pip install torch torchvision torchaudio --index-url [https://download.pytorch.org/whl/cu118](https://download.pytorch.org/whl/cu118)```
+
+# 3. Install model fine-tuning and evaluation libraries
+```pip install transformers peft datasets pandas numpy scikit-learn scipy matplotlib seaborn```
