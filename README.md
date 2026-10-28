@@ -7,7 +7,7 @@
 
 ---
 
-## Abstract & Contribution
+## Research Objectives
 
 Translating antimicrobial peptide (AMP) candidates into clinical therapeutics requires co-optimizing antibacterial potency while preventing off-target mammalian cytotoxicity (hemolysis). Conventional peptide screening methods are slow, expensive, and often fail when optimizing multiple properties simultaneously.
 
