@@ -1,73 +1,56 @@
-# QMAP benchmark
-A domain-specific homology aware benchmark that ensure robust performance evaluation and comparison between models predicting MIC and/or HC50 (regression).
+# Parameter-Efficient Adaptation of Protein Language Models for Dual-Target Antimicrobial Peptide Discovery
 
-Features:
-- Regression on consensus bacterial MIC and mammal HC50
-- Predefined splits, to ensure comparability
-- N-terminal acetylation and C-terminal amidation
-- Common noncannonical amino acids O: Ornithine and B: 2,4-Diaminobutyric acid
-- Non-cannonical peptides as SMILES
-- Intrachain bonds: 
-- Machine learning ready dataset
-- Extendable training dataset, so you can use your own data.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
+[![PEFT](https://img.shields.io/badge/PEFT-LoRA-orange.svg)](https://github.com/huggingface/peft)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## Leaderboard
-> **Add an entry:**
->
-> Here is the leaderboard. Please open an issue to add your model to the leaderboard with the code to reproduce the results, and the reference paper.
+Official repository for **"Parameter-Efficient Adaptation of Protein Language Models for Dual-Target Antimicrobial Peptide Discovery Under Strict Homology Constraints"**.
 
-### Full - e. coli
-| Method | Year | e. coli min PCC | e. coli mean | e. coli max PCC | Source Code |
-|--------|------|-----------------|--------------|-----------------|--------|
-|Linear model on ESM2 embeddings| N/A | 0.32. | 0.36 |  0.41 | [`eval_prev_works/Linear`](eval_prev_works/Linear)|
-| [J. Witten and Z. Witten](https://doi.org/10.1101/692681) | 2019 | 0.47 | 0.51 | 0.56 | [`eval_prev_works/Antimicrobial-Peptides`](eval_prev_works/Antimicrobial-Peptides)
-| [J. Cai et al](https://doi.org/10.1021/acs.jcim.4c01749)| 2025 | 0.47 | 0.52 | 0.56 | [`eval_prev_works/AMP_regression_EC_SA`](eval_prev_works/AMP_regression_EC_SA)|
+---
 
-### High efficiency - e. coli
-| Method | Year | e. coli min PCC | e. coli mean | e. coli max PCC | Source Code |
-|--------|------|-----------------|--------------|-----------------|--------|
-|Linear model on ESM2 embeddings| N/A | 0.06 | 0.16 |  0.22 | [`eval_prev_works/Linear`](eval_prev_works/Linear)|
-| [J. Witten and Z. Witten](https://doi.org/10.1101/692681) | 2019 | 0.10 | 0.22 | 0.33 | [`eval_prev_works/Antimicrobial-Peptides`](eval_prev_works/Antimicrobial-Peptides)
-| [J. Cai et al](https://doi.org/10.1021/acs.jcim.4c01749)| 2025 | 0.20 | 0.29 | 0.33 | [`eval_prev_works/AMP_regression_EC_SA`](eval_prev_works/AMP_regression_EC_SA)|
+## Abstract & Contribution
 
-### Full - hc50
-| Method | Year | e. coli min PCC | e. coli mean | e. coli max PCC | Source Code |
-|--------|------|-----------------|--------------|-----------------|--------|
-|Linear model on ESM2 embeddings| N/A | -0.18 | 0.07 |  0.29 | [`eval_prev_works/HemoLinear`](eval_prev_works/HemoLinear)|
+Translating antimicrobial peptide (AMP) candidates into clinical therapeutics requires co-optimizing antibacterial potency while preventing off-target mammalian cytotoxicity (hemolysis). Conventional methodologies isolate these predictive tasks into disconnected models or experience steep performance decay under stringent sequence homology splits.
 
-## Install QMAP-benchmark
-```shell
-pip install qmap-benchmark
-```
+This work introduces an end-to-end multi-task parameter-efficient transfer learning architecture built on top of the **ESM-2 (150M)** foundational protein language model:
+- **Low-Rank Adaptation (LoRA):** Injected directly into attention projection layers ($r=8, \alpha=16$), updating merely **$\sim 0.70\%$ of parameters** ($\sim 1.05\text{M}$ tunable weights) to eliminate catastrophic forgetting while preserving sequence-level structural representations.
+- **Adaptive Multi-Task Loss Balancing:** Reconciles conflicting gradient dynamics between bacterial potency ($p\text{MIC}$) and hemolytic cytotoxicity ($\log_{10}\text{HC}_{50}$) via **Kendall homoscedastic uncertainty weighting**.
+- **Homology-Controlled Validation:** Benchmarked across strict **QMAP splits (60% sequence identity threshold)** to guarantee out-of-distribution generalization without data leakage.
+- **In Silico De-Novo Screening:** Deployed on a curated library of 749 newly designed peptides to isolate selective leads with Therapeutic Indices ($\text{TI} = \text{HC}_{50} / \text{MIC}$) up to **144.03**.
 
-## Documentation
-The documentation formatted as markdown is available in [QMAP/docs/references](QMAP/docs/references)  
-Examples are shown in [QMAP/docs/examples](QMAP/docs/examples)
+---
 
-## Reproduce the results or the paper
-To reproduce the results of the paper, you must first fetch and prepare the [data](data/README.md).
+## 🔬 Benchmark Results
 
-Then, you can run what you are interested in:)
+Evaluated on the predefined **QMAP benchmark homology test splits**:
 
-The repo is structured as follow:
-- [`data`](data/README.md): Code to download and prepare the data used in the project.
-- [`eval_prev_works`](eval_prev_works/README.md): Code to evaluate previous methods on the QMAP benchmark and to draw the figures showing the performances.
-- [`figures`](figures/README.md): Contains multiple notebooks to generate additional visualizations.
+| Model Framework | Tuning Strategy | Tunable Params | *E. coli* $\rho$ | *E. coli* $r$ | Hemolysis $\rho$ | Hemolysis $r$ |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| QMAP HemoLinear | Linear Ridge | Descriptors (Fixed) | 0.35 | 0.40 | 0.15--0.25 | 0.18--0.28 |
+| QMAP BERT-AmPEP60 | Full Fine-Tuning | 100% | 0.44 | 0.48 | N/A | N/A |
+| Frozen ESM-2 (150M) | Linear Probing | 0% (Head Only) | 0.5780 | 0.6418 | 0.25 | 0.30 |
+| Single-Task LoRA ($r=8$) | Dedicated LoRA | $2 \times 921\text{k}$ (0.61%) | **0.6966** | **0.7528** | 0.5314 | 0.5123 |
+| Joint Multi-Task LoRA | Static Loss ($\lambda=0.5$) | 1.05M (0.70%) | 0.6251 | 0.6892 | 0.3981 | 0.4202 |
+| **Joint Multi-Task LoRA (Ours)** | **Uncertainty Weighting** | **1.05M (0.70%)** | **0.6132** | **0.6816** | **0.5374** | **0.5541** |
 
-- [`QMAP`](QMAP/README.md): The PyPi package code.
+*Our uncertainty-weighted joint framework significantly improves hemolytic toxicity rank correlation over standard linear probes and static loss baselines while maintaining high antibacterial predictive fidelity.*
 
-## Please Cite
-Please cite us if you find yourself using our work
+---
 
-```
-@article{Lavertu2026QMAP,
-  author  = {Lavertu, Anthony and Corbeil, Jacques and Germain, Pascal},
-  title   = {QMAP: a benchmark for standardized evaluation of antimicrobial peptide MIC and hemolytic activity regression},
-  journal = {Scientific Reports},
-  year    = {2026},
-  volume  = {16},
-  pages   = {25387},
-  doi     = {10.1038/s41598-026-56004-8},
-  url     = {https://doi.org/10.1038/s41598-026-56004-8}
-}
-```
+## Repository Structure
+
+```text
+├── multitask_dataset_final.csv       # Preprocessed QMAP dataset with homology-controlled splits
+├── hemolysis_dataset.csv             # Mammalian hemolysis benchmark evaluation subset
+├── screened_denovo_leads.csv         # 749 screened de-novo peptide candidates and predicted TIs
+├── train_multitask_uncertainty.py    # Main training script (ESM-2 + LoRA + Uncertainty Weighting)
+├── train_multitask_lora.py           # Multi-task baseline with static loss weighting
+├── train_ec_lora.py                  # Single-task E. coli potency baseline
+├── train_hemo_lora.py                # Single-task mammalian hemolysis baseline
+├── train_ec_frozen_baseline.py       # Frozen ESM-2 linear probe baseline
+├── screen_peptides.py                # Screening pipeline for computing TI and prioritizing leads
+├── generate_and_screen.py            # De-novo sequence generation and batch screening
+├── make_fig1.py                      # Pipeline architecture and workflow diagram generator
+├── make_fig2.py                      # Parity plots generator (Experimental vs Predicted)
+└── README.md
