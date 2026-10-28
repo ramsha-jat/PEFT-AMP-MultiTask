@@ -9,13 +9,13 @@
 
 ## Abstract & Contribution
 
-Translating antimicrobial peptide (AMP) candidates into clinical therapeutics requires co-optimizing antibacterial potency while preventing off-target mammalian cytotoxicity (hemolysis). Conventional methodologies isolate these predictive tasks into disconnected models or experience steep performance decay under stringent sequence homology splits.
+Translating antimicrobial peptide (AMP) candidates into clinical therapeutics requires co-optimizing antibacterial potency while preventing off-target mammalian cytotoxicity (hemolysis). Conventional peptide screening methods are slow, expensive, and often fail when optimizing multiple properties simultaneously.
 
 This work introduces an end-to-end multi-task parameter-efficient transfer learning architecture built on top of the **ESM-2 (150M)** foundational protein language model:
-- **Low-Rank Adaptation (LoRA):** Injected directly into attention projection layers ($r=8, \alpha=16$), updating merely **$\sim 0.70\%$ of parameters** ($\sim 1.05\text{M}$ tunable weights) to eliminate catastrophic forgetting while preserving sequence-level structural representations.
+- **Low-Rank Adaptation (LoRA):** Injected directly into attention projection layers ($r=8, \alpha=16$), updating merely **~0.70% of parameters** (~1.05M tunable weights) to enable efficient adaptation.
 - **Adaptive Multi-Task Loss Balancing:** Reconciles conflicting gradient dynamics between bacterial potency ($p\text{MIC}$) and hemolytic cytotoxicity ($\log_{10}\text{HC}_{50}$) via **Kendall homoscedastic uncertainty weighting**.
 - **Homology-Controlled Validation:** Benchmarked across strict **QMAP splits (60% sequence identity threshold)** to guarantee out-of-distribution generalization without data leakage.
-- **In Silico De-Novo Screening:** Deployed on a curated library of 749 newly designed peptides to isolate selective leads with Therapeutic Indices ($\text{TI} = \text{HC}_{50} / \text{MIC}$) up to **144.03**.
+- **In Silico De-Novo Screening:** Deployed on a curated library of 749 newly designed peptides to isolate selective leads with Therapeutic Indices ($\text{TI} = \text{HC}_{50} / \text{MIC}$) up to **high selective values**.
 
 ---
 
@@ -32,7 +32,7 @@ Evaluated on the predefined **QMAP benchmark homology test splits**:
 | Joint Multi-Task LoRA | Static Loss ($\lambda=0.5$) | 1.05M (0.70%) | 0.6251 | 0.6892 | 0.3981 | 0.4202 |
 | **Joint Multi-Task LoRA (Ours)** | **Uncertainty Weighting** | **1.05M (0.70%)** | **0.6132** | **0.6816** | **0.5374** | **0.5541** |
 
-*Our uncertainty-weighted joint framework significantly improves hemolytic toxicity rank correlation over standard linear probes and static loss baselines while maintaining high antibacterial predictive fidelity.*
+*Our uncertainty-weighted joint framework significantly improves hemolytic toxicity rank correlation over standard linear probes and static loss baselines while maintaining high antibacterial prediction quality.*
 
 ---
 
@@ -51,22 +51,32 @@ Evaluated on the predefined **QMAP benchmark homology test splits**:
 ├── generate_and_screen.py            # De-novo sequence generation and batch screening
 ├── make_fig1.py                      # Pipeline architecture and workflow diagram generator
 ├── make_fig2.py                      # Parity plots generator (Experimental vs Predicted)
-└── README.md```
+└── README.md
 ```
 
 ## Setup and Environment Installation
 
-```git clone [https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git](https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git)
-cd PEFT-AMP-MultiTask```
----
+```bash
+git clone https://github.com/ramsha-jat/PEFT-AMP-MultiTask.git
+cd PEFT-AMP-MultiTask
+```
 
-#1. Create and activate a virtual environment
-```python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate```
+### 1. Create and activate a virtual environment
 
-# 2. Install PyTorch with CUDA support
-```pip install --upgrade pip
-pip install torch torchvision torchaudio --index-url [https://download.pytorch.org/whl/cu118](https://download.pytorch.org/whl/cu118)```
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-# 3. Install model fine-tuning and evaluation libraries
-```pip install transformers peft datasets pandas numpy scikit-learn scipy matplotlib seaborn```
+### 2. Install PyTorch with CUDA support
+
+```bash
+pip install --upgrade pip
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+### 3. Install model fine-tuning and evaluation libraries
+
+```bash
+pip install transformers peft datasets pandas numpy scikit-learn scipy matplotlib seaborn
+```
